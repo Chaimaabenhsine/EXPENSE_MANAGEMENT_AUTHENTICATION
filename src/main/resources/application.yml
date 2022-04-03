@@ -1,0 +1,17 @@
+spring:
+      jpa:
+          show-sql: true
+          hibernate:
+                    ddl-auto: create
+                    dialect: org.hibernate.dialect.MySQL5Dialect
+      datasource:
+          url: jdbc:mysql://localhost:3306/notef
+          username: root
+          password: 
+      main:
+          allow-circular-references: true
+server:
+      port: 8082
+cors:
+      enabled: ${CORS_ENABLED:true}
+      allowedAdresses: ${CORS_ALLOWED_ADDRESSES:http://localhost:4200}

@@ -1,26 +1,23 @@
 package projet.micro.auth;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import projet.micro.auth.model.Role;
 import projet.micro.auth.model.User;
+import projet.micro.auth.service.RoleService;
 import projet.micro.auth.service.UserService;
 
-@SpringBootApplication
+@SpringBootApplication 
 public class AuthApplication{
 
-    @Autowired
-    UserService userService;
     public static void main(String[] args) {
         SpringApplication.run(AuthApplication.class, args);
     }
@@ -30,30 +27,29 @@ public class AuthApplication{
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-	CommandLineRunner run(UserService userService)
-	{
-		return args ->{
-			Role role1= userService.saveRole(new Role(null,"ROLE_COLLABORATEUR","test"));
-			Role role2= userService.saveRole(new Role(null,"ROLE_RESPONSABLE","test"));
-			Role role3= userService.saveRole(new Role(null,"ROLE_ADMINISTRATEUR","test"));
-			Role role4= userService.saveRole(new Role(null,"ROLE_DIRECTEUR","test"));
-			
-			Collection <Role> roles=new ArrayList<>();
-			roles.add(role1);
-			
-			Collection <Role> roles1=new ArrayList<>();
-			roles1.add(role1);
-			roles1.add(role3);
-			userService.saveUser(new User(null,"Mahmoud","Atif","login","matif@gmail.com","login",roles));
-			userService.saveUser(new User(null,"Khadija","Karimi","login1","kkarimi@gmail.com","login1",roles1));
-			
-			//userService.addRoleToUser("login", "ROLE_ADMINISTRATEUR");
-			//userService.addRoleToUser("login1", "ROLE_RESPONSABLE");
-		};
-		
-	}
+ 
+	
+    @Bean 
+    CommandLineRunner run(UserService userService, RoleService roleService)
+    {
+    	return args->{
+    	    Role role1= roleService.saveRole(new Role(1L, "ROLE_ADMINISTRATEUR","test"));
+    	    Role role2= roleService.saveRole(new Role(2L, "ROLE_RESPONSABLE","test"));
+    	    
+    	    List<Role> roles1=new ArrayList<>();
+    	    roles1.add(role1);
+    	    
+    	    
+    	    List<Role> roles2=new ArrayList<>();
+    	    roles2.add(role2);
+    	    
+    	    
+    	    userService.saveUser(new User(1L,"Mahmoud","Atif","login","Mahmoud@gmail.com","login",roles1));
+    	    userService.saveUser(new User(2L,"Khadija","Karimi","login1","Kkarimi@gmail.com","login1",roles2));
 
+    	    
+    	};
+    }
 
 
 
