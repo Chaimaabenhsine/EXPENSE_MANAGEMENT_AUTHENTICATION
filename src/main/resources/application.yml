@@ -1,3 +1,5 @@
+jwt:
+      secret: '[a-zA-Z0-9._]+$Guidelines89797987forAlphabeticalArraNumeralsandOtherSymbo$'
 spring:
       jpa:
           show-sql: true
@@ -10,6 +12,10 @@ spring:
           password: 
       main:
           allow-circular-references: true
+      mvc :
+          throw-exception-if-no-handler-found: true
+      ressources: 
+          add-mappings: false
 server:
       port: 8082
 cors:

@@ -1,4 +1,4 @@
-package projet.micro.auth.controller;
+ package projet.micro.auth.controller;
 
 
 import java.io.IOException;
@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import projet.micro.auth.controller.handler.ExceptionHandling;
+import projet.micro.auth.exception.UsernameExistException;
 import projet.micro.auth.model.User;
 import projet.micro.auth.service.UserService;
 
 
 @RestController @RequestMapping("/api/users") @RequiredArgsConstructor
-public class UserController 
+public class UserController extends ExceptionHandling
 {
 	
     private final UserService userService;
@@ -45,7 +47,7 @@ public class UserController
     
     @PreAuthorize("hasRole('ROLE_ADMINISTRATEUR')")
     @PostMapping
-    public User saveUser(@Valid @RequestBody User user)
+    public User saveUser(@Valid @RequestBody User user) throws UsernameExistException
     {
           return userService.saveUser(user);
     }

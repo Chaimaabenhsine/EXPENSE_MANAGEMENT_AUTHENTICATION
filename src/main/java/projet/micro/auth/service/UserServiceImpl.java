@@ -5,7 +5,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import projet.micro.auth.exception.UsernameExistException;
 import projet.micro.auth.model.Role;
 import projet.micro.auth.model.User;
 import projet.micro.auth.repo.UserRepository;
@@ -47,11 +47,12 @@ public class UserServiceImpl implements UserService, UserDetailsService
 
 
     @Override
-    public User saveUser(User user) 
+    public User saveUser(User user) throws UsernameExistException
     {
-		if(userRepository.existsById(user.getId())) 
+    	User userr =userRepository.findByUsername(user.getUsername());
+		if(userr != null) 
 		{ 
-			log.debug("username entred already exist");
+			throw new UsernameExistException("the username is already taken");
 		}
 		String passwordToCrypt=user.getPassword();
         user.setPassword(passwordEncoder.encode(passwordToCrypt));
@@ -94,7 +95,7 @@ public class UserServiceImpl implements UserService, UserDetailsService
 
         if(user == null)  throw new UsernameNotFoundException("User not found in the database!");
        
-        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         user.getRoles()
                 .forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
         return new org.springframework.security.core.userdetails.User(

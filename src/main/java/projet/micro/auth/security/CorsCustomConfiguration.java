@@ -10,20 +10,19 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.Arrays;
 import java.util.List;
 
 
 @Configuration
 public class CorsCustomConfiguration {
 
-    @Value("${cors.allowedAdresses}")
-    private List<String> corsAllowedAddresses;
 
     @Bean
     @ConditionalOnProperty(value = "cors.enabled", havingValue = "true")
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(corsAllowedAddresses);
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
         configuration.setAllowCredentials(true);
         configuration.addAllowedHeader("x-requested-with");
         configuration.addAllowedHeader("authorization");

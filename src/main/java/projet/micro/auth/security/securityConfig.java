@@ -1,6 +1,8 @@
 package projet.micro.auth.security;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,6 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import lombok.RequiredArgsConstructor;
 import projet.micro.auth.security.filters.CustomAuthenticationFilter;
 import projet.micro.auth.security.filters.CustomAuthorizationFilter;
+import projet.micro.auth.utils.JWTUtils;
 
 
 @Configuration @EnableWebSecurity @EnableGlobalMethodSecurity(prePostEnabled = true) @RequiredArgsConstructor
@@ -37,9 +40,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.headers().frameOptions().disable();
-        http.authorizeRequests().antMatchers("/login/**","/api/users/token/refresh/**").permitAll();
+        http.authorizeRequests().antMatchers(JWTUtils.PUBLIC_URLS).permitAll();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
+    
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+   
 }
