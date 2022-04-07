@@ -14,7 +14,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
-import projet.micro.auth.security.filters.CustomAuthenticationFilter;
 import projet.micro.auth.security.filters.CustomAuthorizationFilter;
 import projet.micro.auth.utils.JWTUtils;
 
@@ -24,6 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final  UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final CustomAuthorizationFilter customAuthorizationFilter;
 
 
     @Override
@@ -35,15 +35,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
-      
+    protected void configure(HttpSecurity http) throws Exception 
+    {  
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.headers().frameOptions().disable();
-        http.authorizeRequests().antMatchers(JWTUtils.PUBLIC_URLS).permitAll();
+        http.authorizeRequests().antMatchers("/api/auth/login/**","/api/auth/refreshToken/**").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
-        http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
-        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
     }
     
 

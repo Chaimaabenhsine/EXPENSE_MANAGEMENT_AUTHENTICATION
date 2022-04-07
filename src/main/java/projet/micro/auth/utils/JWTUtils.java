@@ -14,5 +14,5 @@ public class JWTUtils
 	public static final long EXPIRE_ACCES_TOKEN = 1*60*1_000L;
 	public static final long EXPIRE_REFRESH_TOKEN = 7*60*1_000L;
 	
-	public static final String[] PUBLIC_URLS= {"/login/**","/api/users/token/refresh/**"};
+	public static final String[] PUBLIC_URLS= {"/api/auth/login/**","/api/auth/refreshToken/**"};
 }

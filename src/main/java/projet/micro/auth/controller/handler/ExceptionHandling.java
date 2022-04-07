@@ -25,7 +25,6 @@ import projet.micro.auth.exception.UsernameExistException;
 public class ExceptionHandling 
 {
 	private static final String NOT_ENOUGH_PERMISSION = "You don not have enough permission";
-	private static final String INCORRECT_CREDENTIALS="Username or password incorrect. Please try again";
 	private static final String METHOD_NOT_ALLOWED="The method is not allowed";
 	private static final String INTERNAL_SERVER_ERROR="Server internal error";
 	private static final String PAGE_NOT_FOUND="This page was not found";
@@ -38,10 +37,11 @@ public class ExceptionHandling
 	}
 	
 	@ExceptionHandler(BadCredentialsException.class)
-	public ResponseEntity<HttpResponse> badCredentialsException()
+	public ResponseEntity<HttpResponse> badCredentialsException(BadCredentialsException exception)
 	{
-		return createHttpResponse(HttpStatus.BAD_REQUEST,INCORRECT_CREDENTIALS);
+		return createHttpResponse(HttpStatus.BAD_REQUEST,exception.getMessage());
 	}
+
 	
 	@ExceptionHandler(NoHandlerFoundException.class)
 	public ResponseEntity<HttpResponse> noHandlerFoundxception(NoHandlerFoundException e)
